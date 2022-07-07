@@ -6,7 +6,7 @@ const addBooksHandler = (request, h) => {
         name, year, author, summary, publisher, pageCount, readPage, reading,
     } = request.payload;
 
-if(name === undefined) {
+if(year === undefined || summary === undefined || publisher === undefined || pageCount === undefined || readPage === undefined || reading === undefined) {
     const response = h.response({
         status : 'fail',
         message : 'Gagal menambahkan buku, Mohon isi nama buku',
@@ -17,7 +17,7 @@ if(name === undefined) {
     return response;
 }
 
-if(pageCount < readPage) {
+if(pageCount > readPage) {
     const response = h.response({
         status: 'fail',
         message : 'Gagal menambahkan buku, readPage tidak boleh lebih besar dari pageCount',
@@ -95,11 +95,11 @@ const getaddAllBooksHandler = (request, h) => {
 
 const editBookByIdHandler = (request, h) => {
     const { id } = request.params;
-    const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
+    const { name, year, author, summary, publisher, pageCount, readPage, reading,  } = request.payload;
 
     const updatedAt = new Date().toISOString;
     const index = books.findIndex((book) => book.id === id);
-
+    
     if(index !== -1) {
         if(name === undefined) {
             const response = h.response({
@@ -123,10 +123,19 @@ const editBookByIdHandler = (request, h) => {
 
         const finished = (pageCount === readPage);
 
-        books[index] =  {
+        books[index] = {
             ...books[index],
-            name, year, author, summary, publisher, pageCount, readPage, finished, reading, updatedAt
-        };
+            name,
+            year,
+            author,
+            summary,
+            publisher,
+            pageCount,
+            readPage,
+            finished,
+            reading,
+            updatedAt,
+          };
 
         const response = h.response({
             status: 'success',
